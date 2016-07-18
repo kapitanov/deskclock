@@ -1,3 +1,5 @@
+//go:generate go-bindata -o res.go res/
+
 package main
 
 import "gopkg.in/ini.v1"
@@ -12,7 +14,12 @@ type Glyphs map[rune]*Glyph
 func LoadGlyphs(path string) (Glyphs, error) {
 	glyphs := make(Glyphs)
 
-	file, err := ini.Load(path)
+	bytes, err := Asset("res/glyphs.ini")
+	if err != nil {
+		return nil, err
+	}
+
+	file, err := ini.Load(bytes)
 	if err != nil {
 		return nil, err
 	}
