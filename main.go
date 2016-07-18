@@ -94,6 +94,13 @@ func draw() {
 	xOffset := (r.Width() - 8*len(chars)) / 2
 	yOffset := (r.Height() - 8) / 2
 
+	if xOffset < 0 {
+		xOffset = 0
+	}
+	if yOffset < 0 {
+		yOffset = 0
+	}
+
 	for i := range chars {
 		glyphs[chars[i]].Render(r, 8*i+xOffset, yOffset)
 	}
