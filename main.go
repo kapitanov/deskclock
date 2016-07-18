@@ -80,7 +80,7 @@ func draw() {
 
 	r := NewRenderer()
 
-	h, m, _ := time.Now().Clock()
+	h, m, _ := time.Now().Local().Clock()
 	chars := make([]rune, 5)
 
 	str := fmt.Sprintf("%02d", h)
