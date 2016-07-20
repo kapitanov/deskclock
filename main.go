@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"time"
@@ -9,11 +10,27 @@ import (
 )
 
 var redrawRequest = make(chan int)
-var glyphs Glyphs
+var font Glyphs
+var lcd Glyphs
+
+func init() {
+	var fill int
+	flag.IntVar(&fill, "char", 0x25C7, "Fill character (ASCII code)")
+
+	flag.Parse()
+
+	ChEmpty = rune(fill)
+}
 
 func main() {
 	var err error
-	glyphs, err = LoadGlyphs("glyphs.ini")
+
+	font, err = LoadGlyphs("font.ini")
+	if err != nil {
+		panic(err)
+	}
+
+	lcd, err = LoadGlyphs("lcd.ini")
 	if err != nil {
 		panic(err)
 	}
@@ -102,7 +119,28 @@ func draw() {
 	}
 
 	for i := range chars {
-		glyphs[chars[i]].Render(r, 8*i+xOffset, yOffset)
+		font[chars[i]].Render(r, 8*i+xOffset, yOffset)
+	}
+
+	// Draw title
+
+	title := "CLOCK"
+	yOffset = 2
+	xOffset = (r.Width() - 5*len(title)) / 2
+
+	for i, c := range title {
+		lcd[c].Render(r, 5*i+xOffset, yOffset)
+	}
+
+	// Draw date
+
+	_, month, day := time.Now().Local().Date()
+	date := fmt.Sprintf("%02d.%02d", month, day)
+	yOffset = r.Height() - 5 - 2
+	xOffset = (r.Width() - 5*len(title)) / 2
+
+	for i, c := range date {
+		lcd[c].Render(r, 5*i+xOffset, yOffset)
 	}
 
 	r.Commit()

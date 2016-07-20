@@ -18,7 +18,8 @@ type Renderer interface {
 const Bg = termbox.ColorBlack
 const Fg = termbox.ColorBlue
 const FgFilled = termbox.ColorCyan | termbox.AttrBold
-const ChEmpty = 'X'
+
+var ChEmpty = 'X'
 
 type renderer struct {
 	w, h int

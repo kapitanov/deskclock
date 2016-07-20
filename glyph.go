@@ -14,7 +14,7 @@ type Glyphs map[rune]*Glyph
 func LoadGlyphs(path string) (Glyphs, error) {
 	glyphs := make(Glyphs)
 
-	bytes, err := Asset("res/glyphs.ini")
+	bytes, err := Asset("res/" + path)
 	if err != nil {
 		return nil, err
 	}
