@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"time"
 
@@ -10,8 +9,8 @@ import (
 )
 
 var redrawRequest = make(chan int)
-var font Glyphs
-var lcd Glyphs
+var mainFont Font
+var lcdFont Font
 
 func init() {
 	var fill int
@@ -25,12 +24,17 @@ func init() {
 func main() {
 	var err error
 
-	font, err = LoadGlyphs("font.ini")
+	mainFont, err = LoadFont("font.ini")
 	if err != nil {
 		panic(err)
 	}
 
-	lcd, err = LoadGlyphs("lcd.ini")
+	lcdFont, err = LoadFont("lcd.ini")
+	if err != nil {
+		panic(err)
+	}
+
+	err = InitializeClock()
 	if err != nil {
 		panic(err)
 	}
@@ -97,51 +101,54 @@ func draw() {
 
 	r := NewRenderer()
 
-	h, m, _ := time.Now().Local().Clock()
-	chars := make([]rune, 5)
+	DrawClock(r, mainFont)
+	DrawDate(r, mainFont)
+	/*
+		h, m, _ := time.Now().Local().Clock()
+		chars := make([]rune, 5)
 
-	str := fmt.Sprintf("%02d", h)
-	chars[0] = rune(str[0])
-	chars[1] = rune(str[1])
-	chars[2] = ':'
-	str = fmt.Sprintf("%02d", m)
-	chars[3] = rune(str[0])
-	chars[4] = rune(str[1])
+		str := fmt.Sprintf("%02d", h)
+		chars[0] = rune(str[0])
+		chars[1] = rune(str[1])
+		chars[2] = ':'
+		str = fmt.Sprintf("%02d", m)
+		chars[3] = rune(str[0])
+		chars[4] = rune(str[1])
 
-	xOffset := (r.Width() - 8*len(chars)) / 2
-	yOffset := (r.Height() - 8) / 2
+		xOffset := (r.Width() - 8*len(chars)) / 2
+		yOffset := (r.Height() - 8) / 2
 
-	if xOffset < 0 {
-		xOffset = 0
-	}
-	if yOffset < 0 {
-		yOffset = 0
-	}
+		if xOffset < 0 {
+			xOffset = 0
+		}
+		if yOffset < 0 {
+			yOffset = 0
+		}
 
-	for i := range chars {
-		font[chars[i]].Render(r, 8*i+xOffset, yOffset)
-	}
+		for i := range chars {
+			font[chars[i]].Render(r, 8*i+xOffset, yOffset)
+		}
 
-	// Draw title
+		// Draw title
 
-	title := "CLOCK"
-	yOffset = 2
-	xOffset = (r.Width() - 5*len(title)) / 2
+		title := "CLOCK"
+		yOffset = 2
+		xOffset = (r.Width() - 5*len(title)) / 2
 
-	for i, c := range title {
-		lcd[c].Render(r, 5*i+xOffset, yOffset)
-	}
+		for i, c := range title {
+			lcd[c].Render(r, 5*i+xOffset, yOffset)
+		}
 
-	// Draw date
+		// Draw date
 
-	_, month, day := time.Now().Local().Date()
-	date := fmt.Sprintf("%02d.%02d", month, day)
-	yOffset = r.Height() - 5 - 2
-	xOffset = (r.Width() - 5*len(title)) / 2
+		_, month, day := time.Now().Local().Date()
+		date := fmt.Sprintf("%02d.%02d", month, day)
+		yOffset = r.Height() - 5 - 2
+		xOffset = (r.Width() - 5*len(title)) / 2
 
-	for i, c := range date {
-		lcd[c].Render(r, 5*i+xOffset, yOffset)
-	}
+		for i, c := range date {
+			lcd[c].Render(r, 5*i+xOffset, yOffset)
+		}*/
 
 	r.Commit()
 }
