@@ -4,7 +4,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 
 	"gopkg.in/ini.v1"
 )
@@ -157,7 +156,6 @@ func (f *fontImpl) Runes() []rune {
 func (f *fontImpl) GetGlyph(c rune) Glyph {
 	glyph, exists := f.glyphs[c]
 	if !exists {
-		panic(fmt.Sprintf("<%c>", c)) // todo
 		return f.emptyGlyph
 	}
 
