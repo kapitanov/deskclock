@@ -16,8 +16,9 @@ type Renderer interface {
 }
 
 const Bg = termbox.ColorBlack
-const Fg = termbox.ColorBlue
-const FgFilled = termbox.ColorCyan | termbox.AttrBold
+
+var Fg = termbox.ColorBlue
+var FgFilled = termbox.ColorCyan | termbox.AttrBold
 
 var ChEmpty = 'X'
 

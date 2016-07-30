@@ -14,11 +14,40 @@ var lcdFont Font
 var iconFont Font
 
 func init() {
+	parseColor := func(str string, def termbox.Attribute) termbox.Attribute {
+		switch str {
+		case "cyan":
+			return termbox.ColorCyan
+		case "blue":
+			return termbox.ColorBlue
+		case "green":
+			return termbox.ColorGreen
+		case "magenta":
+			return termbox.ColorMagenta
+		case "red":
+			return termbox.ColorRed
+		case "white":
+			return termbox.ColorWhite
+		case "yellow":
+			return termbox.ColorYellow
+		case "black":
+			return termbox.ColorBlack
+		}
+		return def
+	}
+
 	var fill int
 	flag.IntVar(&fill, "char", 0x25C7, "Fill character (ASCII code)")
+	flag.StringVar(&city, "city", "", "City ID")
+
+	var fg, bg string
+	flag.StringVar(&fg, "fg", "", "Foreground")
+	flag.StringVar(&bg, "bg", "", "Background")
 
 	flag.Parse()
 	ChEmpty = rune(fill)
+	Fg = parseColor(bg, termbox.ColorBlue)
+	FgFilled = parseColor(fg, termbox.ColorCyan) | termbox.AttrBold
 }
 
 func main() {
